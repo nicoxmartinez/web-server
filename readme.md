@@ -23,7 +23,7 @@ cd build/ && make run
 docker build -f build/Dockerfile -t web-server .
 ```
 
-###### comando para construir la imagen en docker:
+###### comando para ejecutar el contenedor:
 ```bash
 docker run -p 8080:8080 --name mi_servidor web-server
 ```
