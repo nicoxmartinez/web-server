@@ -1,0 +1,17 @@
+# Executables
+build/bin/
+*.o
+*.out
+
+# IDEs and Text Editors
+.vscode/
+.idea/
+*.swp
+*~
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Docker logs and local overrides (if any)
+*.log
