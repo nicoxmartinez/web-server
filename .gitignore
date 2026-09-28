@@ -1,5 +1,5 @@
 # Executables
-build/bin/
+build/
 *.o
 *.out
 

@@ -13,7 +13,7 @@ BIN_DIR   = $(BUILD_DIR)/bin
 OBJ_DIR   = $(BUILD_DIR)/obj
 
 # Archivos Fuente y Objetos
-SRCS = $(SRC_DIR)/main.c $(SRC_DIR)/lib/sendFile.c
+SRCS = $(SRC_DIR)/main.c $(SRC_DIR)/lib/sendFile.c $(SRC_DIR)/lib/server.c
 OBJS = $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 TARGET = $(BIN_DIR)/main
 
