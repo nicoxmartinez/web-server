@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <nav>
+      <h2>Documentación</h2>
+      <a href="http://localhost:8080/index">Arquitectura</a>
+      <span>/</span>
+      <a href="http://localhost:8080/docker">Contenedorización</a>
+    </nav>
+    <main>
+      <h1>Referencia de Módulos Internos</h1>
+      <p>
+        El servidor se compone de abstracciones en <code>src/lib/</code> para
+        mantener una clara separación de responsabilidades.
+      </p>
+
+      <h2>Módulo del Server (<code>server.h</code>)</h2>
+      <p>
+        Encargado de inicializar, enlazar y escuchar peticiones HTTP en el
+        socket.
+      </p>
+      <h2>Módulo de archivos (<code>sendFile.h</code>)</h2>
+      <p>
+        Se encarga del manejo de archivos estáticos, la construcción
+        dinámica de cabeceras HTTP y el manejo de respuestas 404.
+      </p>
+    </main>
+  </body>
+</html>

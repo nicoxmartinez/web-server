@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <nav>
+      <h2>Documentación</h2>
+      <a href="http://localhost:8080/index">Arquitectura</a>
+      <span>/</span>
+      <a href="http://localhost:8080/modulos">Módulos C</a>
+    </nav>
+    <main>
+      <h1>Contenedorización con Docker</h1>
+      <p>
+        El proyecto utiliza una estrategia de compilación en dos etapas
+        (*Multi-stage*) para generar un contenedor de producción ultra ligero
+        que contiene solo el binario C ejecutable y los archivos estáticos.
+      </p>
+
+      <h2>Comandos de Automatización</h2>
+      <p>
+        A través del
+        <code>Dockerfile</code>
+        puedes construir el contenedor fácilmente:
+      </p>
+      <pre>
+        <code>
+          # Compilar la imagen
+          docker build -t web-server .
+
+          # Ejecución del contenedor
+          docker run -p 8080:8080 --name mi_servidor web-server
+        </code>
+      </pre>
+    </main>
+  </body>
+</html>

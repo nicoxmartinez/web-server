@@ -1,4 +1,5 @@
 #include "server.h"
+#include "sslConfig.h"
 #include "sendFile.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,6 +14,9 @@ Server create_server(int port)
     Server server;
     server.port = port;
     server.is_running = 0;
+
+    // Inicializar el contexto TLS mediante el módulo sslConfig
+    server.ssl_ctx = init_ssl_context("certs/cert.pem", "certs/key.pem");
 
     // Crear el socket (domain: IPv4, type: SOCK_STREAM, protocol: TCP)
     server.server_fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -55,7 +59,7 @@ void start_server(Server *server)
     }
 
     server->is_running = 1;
-    printf("Servidor HTTP corriendo en el puerto %d...\n", server->port);
+    printf("Servidor HTTPS corriendo en el puerto %d...\n", server->port);
 
     int addrlen = sizeof(server->address);
     char buffer[BUFFER_SIZE] = {0};
@@ -70,28 +74,46 @@ void start_server(Server *server)
             continue;
         }
 
-        // Leer la petición HTTP enviada por el cliente/navegador
-        memset(buffer, 0, BUFFER_SIZE);
-        read(client_socket, buffer, BUFFER_SIZE - 1);
+        // Crear instancia SSL vinculada al socket del cliente
+        SSL *ssl = SSL_new(server->ssl_ctx);
+        SSL_set_fd(ssl, client_socket);
 
-        char method[16], path[256], file_path[512];
-        // Extraer método y ruta del buffer
-        sscanf(buffer, "%s %s", method, path);
-        printf("Peticion: %s %s\n", method, path);
-
-        if (strcmp(path, "/") == 0)
+        // Realizar el Handshake TLS
+        int ssl_err = SSL_accept(ssl);
+        if (ssl_err <= 0)
         {
-            strcpy(file_path, "src/static/index.html");
+            int err_code = SSL_get_error(ssl, ssl_err);
+            printf("Fallo en SSL_accept (Código de error SSL: %d)\n", err_code);
+            ERR_print_errors_fp(stderr);
         }
         else
         {
-            // envia un archivo estatico segun su nombre en la ruta indicada
-            snprintf(file_path, sizeof(file_path), "src/static/%s.html", path);
+            // Leer la petición HTTP cifrada enviada por el cliente/navegador
+            memset(buffer, 0, BUFFER_SIZE);
+            SSL_read(ssl, buffer, BUFFER_SIZE - 1);
+
+            char method[16], path[256], file_path[512];
+            // Extraer método y ruta del buffer
+            sscanf(buffer, "%s %s", method, path);
+            printf("Peticion cifrada: %s %s\n", method, path);
+
+            if (strcmp(path, "/") == 0)
+            {
+                strcpy(file_path, "src/static/index.html");
+            }
+            else
+            {
+                // envía un archivo estático según su nombre en la ruta indicada
+                snprintf(file_path, sizeof(file_path), "src/static%s.html", path);
+            }
+
+            // servir el archivo correspondiente cifrado
+            send_file(ssl, file_path, "200 OK");
         }
 
-        // servir el archivo correspondiente
-        send_file(client_socket, file_path, "200 OK");
-
+        // Liberar recursos SSL y cerrar socket
+        SSL_shutdown(ssl);
+        SSL_free(ssl);
         close(client_socket);
     }
 }
@@ -101,7 +123,13 @@ void stop_server(Server *server)
     if (server->is_running)
     {
         server->is_running = 0;
+        
+        // Cerrar el socket POSIX
         close(server->server_fd);
-        printf("Servidor detenido.\n");
+
+        // Liberar el contexto SSL y limpiar la librería OpenSSL
+        cleanup_ssl_context(server->ssl_ctx);
+
+        printf("Servidor HTTPS detenido.\n");
     }
 }

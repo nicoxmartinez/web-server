@@ -3,7 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 
-void send_file(int client_socket, const char *file_path, const char *http_status)
+void send_file(SSL *ssl, const char *file_path, const char *http_status)
 {
     FILE *file = fopen(file_path, "rb");
 
@@ -13,7 +13,7 @@ void send_file(int client_socket, const char *file_path, const char *http_status
         perror("Error al abrir el archivo solicitado");
         if (strcmp(file_path, "src/static/notFound.html") != 0)
         {
-            send_file(client_socket, "src/static/notFound.html", "404 Not Found");
+            send_file(ssl, "src/static/notFound.html", "404 Not Found");
         }
         return;
     }
@@ -34,14 +34,14 @@ void send_file(int client_socket, const char *file_path, const char *http_status
              file_size);
 
     // Enviar cabeceras
-    write(client_socket, headers, strlen(headers));
+    SSL_write(ssl, headers, strlen(headers));
 
     // Enviar el contenido del archivo HTML
     char buffer[1024];
     size_t bytes_read;
     while ((bytes_read = fread(buffer, 1, sizeof(buffer), file)) > 0)
     {
-        write(client_socket, buffer, bytes_read);
+        SSL_write(ssl, buffer, bytes_read);
     }
 
     fclose(file);

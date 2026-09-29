@@ -15,7 +15,7 @@ Un servidor HTTP/1.1 estático construido desde cero en **C** utilizando la API 
 
 ###### comando para probar el servidor localmente:
 ```bash
-cd build/ && make run
+make run
 ```
 
 ###### comando para construir la imagen en docker:

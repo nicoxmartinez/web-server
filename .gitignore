@@ -15,3 +15,9 @@ Thumbs.db
 
 # Docker logs and local overrides (if any)
 *.log
+
+# Certificados y claves privadas SSL/TLS
+certs/
+*.pem
+*.key
+*.crt

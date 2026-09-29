@@ -5,12 +5,35 @@
     <title>Web Server</title>
   </head>
   <body>
-    <h1>Bienvenido al servidor Web</h1>
-    <p>
-      Un servidor HTTP/1.1 estático construido desde cero en **C** utilizando la
-      API nativa de **POSIX Sockets** bajo Linux. Este proyecto aborda el flujo
-      de red a bajo nivel, gestión de memoria manual, parseo de peticiones HTTP
-      y manejo del sistema de archivos.
-    </p>
+    <nav>
+      <h2>Documentación</h2>
+      <a href="http://localhost:8080/modulos">Módulos C</a>
+      <span>/</span>
+      <a href="http://localhost:8080/docker">Contenedorización</a>
+    </nav>
+    <main>
+      <h1>Arquitectura del Servidor</h1>
+      <p>
+        Este servidor web está desarrollado en C estándar (C11) implementando
+        directamente sockets POSIX para la comunicación por red.
+      </p>
+
+      <h2>Estructura del Proyecto</h2>
+      <pre>
+        <code>.
+        ├── Makefile          # Automatización de build
+        ├── Dockerfile        # Multi-stage Docker build
+        └── src/
+            ├── lib/
+            │   ├── sendFile.c # Módulo de envío de archivos HTTP
+            │   └── server.c   # Abstracción del Socket Server
+            ├── main.c         # Punto de entrada
+            └── static/        # Archivos estáticos
+        </code>
+      </pre>
+      <h2>Ciclo de Vida de los Sockets</h2>
+      <p>El flujo de la conexión sigue la secuencia nativa de red:</p>
+      <pre><code>socket() ➔ setsockopt() ➔ bind() ➔ listen() ➔ accept() ➔ read() ➔ write() ➔ close()</code></pre>
+    </main>
   </body>
 </html>
