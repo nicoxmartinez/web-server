@@ -1,6 +1,6 @@
 # Web Server
 
-Un servidor HTTP/1.1 estático construido desde cero en **C** utilizando la API nativa de **POSIX Sockets** bajo Linux. Este proyecto aborda el flujo de red a bajo nivel, gestión de memoria manual, parseo de peticiones HTTP y manejo del sistema de archivos.
+Un servidor HTTPS/1.1 estático construido desde cero en **C** utilizando la API nativa de **POSIX Sockets** y la librería **OpenSSL** bajo Linux. Este proyecto aborda el flujo de red cifrado a bajo nivel, gestión de memoria manual, Handshake TLS/SSL, parseo de peticiones HTTP/HTTPS y manejo del sistema de archivos.
 
 ---
 
@@ -17,6 +17,8 @@ Un servidor HTTP/1.1 estático construido desde cero en **C** utilizando la API 
 ```bash
 make run
 ```
+#### Nota: make run compila el ejecutable y genera automáticamente la pareja de claves SSL (certs/cert.pem y certs/key.pem)
+
 
 ###### comando para construir la imagen en docker:
 ```bash
