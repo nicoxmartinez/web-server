@@ -19,8 +19,8 @@ KEY_FILE  = $(CERTS_DIR)/key.pem
 SRCS = $(SRC_DIR)/main.c \
        $(LIB_DIR)/sendFile.c \
        $(LIB_DIR)/server.c \
-       $(LIB_DIR)/sslConfig.c
-
+       $(LIB_DIR)/sslConfig.c \
+       $(LIB_DIR)/signalsConfig.c
 OBJS = $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
 # Nombre del ejecutable

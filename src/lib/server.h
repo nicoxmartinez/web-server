@@ -6,7 +6,8 @@
 #include <openssl/err.h>
 
 // Estructura del servidor
-typedef struct {
+typedef struct
+{
     int port;
     int server_fd;
     struct sockaddr_in address;
