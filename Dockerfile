@@ -10,10 +10,21 @@ FROM debian:bookworm-slim
 
 WORKDIR /app
 
-COPY --from=builder /app/build/bin/main ./main
-COPY --from=builder /app/src/static ./src/static
+# Instalar dependencias de tiempo de ejecución de OpenSSL y certificados CA
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libssl3 \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
-# Exponemos el puerto 8080
+# copiar la carpeta con el binario del programa
+COPY --from=builder /app/build/bin/main ./main
+# Copiar la carpeta con los archivos estaticos
+COPY --from=builder /app/src/static ./src/static
+# Copiar la carpeta de certificados
+COPY --from=builder /app/certs ./certs
+
+# Exponer el puerto del servidor
 EXPOSE 8080
 
+# Comando para ejecutar la aplicación
 CMD ["./main"]
